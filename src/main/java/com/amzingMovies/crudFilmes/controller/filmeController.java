@@ -30,4 +30,9 @@ public class filmeController {
     public Filme consultMovie(@PathVariable("id") String id){
         return filmesRepository.findById(id).orElse(null);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteMovie(@PathVariable("id") String id){
+        filmesRepository.deleteById(id);
+    }
 }
