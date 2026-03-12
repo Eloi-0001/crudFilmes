@@ -2,11 +2,9 @@ package com.amzingMovies.crudFilmes.controller;
 
 import com.amzingMovies.crudFilmes.model.Filme;
 import com.amzingMovies.crudFilmes.repository.FilmesRepository;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -26,5 +24,10 @@ public class filmeController {
         filme.setId(id);
         filmesRepository.save(filme);
         return filme;
+    }
+
+    @GetMapping("/{id}")
+    public Filme consultMovie(@PathVariable("id") String id){
+        return filmesRepository.findById(id).orElse(null);
     }
 }
