@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @DataJpaTest
 @ActiveProfiles("test")
-class filmeControllerTest {
+class  filmeControllerTest {
 
 
     @Autowired
