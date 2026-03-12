@@ -35,4 +35,10 @@ public class filmeController {
     public void deleteMovie(@PathVariable("id") String id){
         filmesRepository.deleteById(id);
     }
+
+    @PutMapping
+    public void updateMovie(@PathVariable("id") String id, Filme filme){
+        filme.setId(id);
+        filmesRepository.save(filme);
+    }
 }
