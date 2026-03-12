@@ -1,17 +1,30 @@
 package com.amzingMovies.crudFilmes.controller;
 
 import com.amzingMovies.crudFilmes.model.Filme;
+import com.amzingMovies.crudFilmes.repository.FilmesRepository;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/filmes")
 public class filmeController {
 
+    public FilmesRepository filmesRepository;
+
+    public filmeController(FilmesRepository filmesRepository) {
+        this.filmesRepository = filmesRepository;
+    }
+
     @PostMapping
-    public void saveMovie(@RequestBody Filme filme){
+    public Filme saveMovie(@RequestBody Filme filme){
         System.out.println("Filme registrado: " + filme);
+        var id = UUID.randomUUID().toString();
+        filme.setId(id);
+        filmesRepository.save(filme);
+        return filme;
     }
 }

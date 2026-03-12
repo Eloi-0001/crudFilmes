@@ -20,14 +20,6 @@ public class Filme {
     public Integer anoPublicacao;
     public Boolean emCartaz;
 
-    public Long getId1() {
-        return id1;
-    }
-
-    public void setId1(Long id1) {
-        this.id1 = id1;
-    }
-
     public String getId() {
         return id;
     }
