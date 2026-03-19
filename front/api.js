@@ -7,7 +7,7 @@ function mostrarForm(tipo) {
 }
 
 // CARREGAR TODOS OS FILMES (novo)
-async function carregarTodosFilmes() {
+async function carregarTodosFilmes()  {
     try {
         const response = await fetch(API);
         const filmes = await response.json();
