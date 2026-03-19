@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AmazingMovies</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .movie-card {
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+        .movie-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-danger mb-4">
+    <div class="container">
+        <span class="navbar-brand mb-0 h1 mx-auto">AmazingMovies - Catálogo de Filmes</span>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 text-center mb-4">
+            <h1>Gerenciar Filmes</h1>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <button class="btn btn-success mx-1" onclick="mostrarForm('cadastro')"> Adicionar Filme</button>
+            <button class="btn btn-primary mx-1" onclick="mostrarForm('consulta')"> Consultar Filme</button>
+            <button class="btn btn-warning mx-1" onclick="mostrarForm('edicao')"> Editar Filme</button>
+            <button class="btn btn-danger mx-1" onclick="mostrarForm('delecao')"> Deletar Filme</button>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div id="form-cadastro" class="card d-none mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Cadastrar Novo Filme</h5>
+                </div>
+                <div class="card-body">
+                    <input type="text" class="form-control mb-2" id="titulo" placeholder="Título do filme *" required>
+                    <input type="text" class="form-control mb-2" id="genero" placeholder="Gênero">
+                    <input type="text" class="form-control mb-2" id="diretor" placeholder="Diretor">
+                    <input type="number" class="form-control mb-2" id="ano" placeholder="Ano de lançamento">
+                    <input type="number" class="form-control mb-2" id="preco" placeholder="Preço" step="0.01">
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="cartaz">
+                        <label class="form-check-label" for="cartaz">
+                            Em cartaz atualmente
+                        </label>
+                    </div>
+                    <button class="btn btn-success w-100" onclick="cadastrarFilme()">Salvar Filme</button>
+                    <div id="msg-cadastro" class="alert mt-2 d-none"></div>
+                </div>
+            </div>
+
+            <div id="form-consulta" class="card d-none mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Consultar Filme por ID</h5>
+                </div>
+                <div class="card-body">
+                    <input type="text" class="form-control mb-2" id="id-consulta" placeholder="Digite o ID do filme">
+                    <button class="btn btn-primary w-100 mb-3" onclick="consultarFilme()">Buscar Filme</button>
+                    <div id="resultado-consulta" class="mt-3"></div>
+                </div>
+            </div>
+
+            <div id="form-edicao" class="card d-none mb-4">
+                <div class="card-header bg-warning">
+                    <h5 class="mb-0">Editar Filme</h5>
+                </div>
+                <div class="card-body">
+                    <input type="text" class="form-control mb-2" id="id-edicao" placeholder="Digite o ID do filme">
+                    <button class="btn btn-warning w-100 mb-3" onclick="carregarFilme()">Carregar Dados</button>
+
+                    <div id="edicao-campos" class="d-none">
+                        <input type="text" class="form-control mb-2" id="titulo-edit" placeholder="Título">
+                        <input type="text" class="form-control mb-2" id="genero-edit" placeholder="Gênero">
+                        <input type="text" class="form-control mb-2" id="diretor-edit" placeholder="Diretor">
+                        <input type="number" class="form-control mb-2" id="ano-edit" placeholder="Ano">
+                        <input type="number" class="form-control mb-2" id="preco-edit" placeholder="Preço" step="0.01">
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="cartaz-edit">
+                            <label class="form-check-label" for="cartaz-edit">
+                                Em cartaz
+                            </label>
+                        </div>
+                        <button class="btn btn-warning w-100" onclick="editarFilme()">Atualizar Filme</button>
+                    </div>
+
+                    <div id="msg-edicao" class="alert mt-2 d-none"></div>
+                </div>
+            </div>
+
+            <div id="form-delecao" class="card d-none mb-4">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">Deletar Filme</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                         Atenção! Esta ação não pode ser desfeita.
+                    </div>
+                    <input type="text" class="form-control mb-2" id="id-delecao" placeholder="Digite o ID do filme">
+                    <button class="btn btn-danger w-100" onclick="deletarFilme()">Deletar Filme</button>
+                    <div id="msg-delecao" class="alert mt-2 d-none"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3>Todos os Filmes</h3>
+                <button class="btn btn-sm btn-outline-danger" onclick="carregarTodosFilmes()">
+                    Atualizar Lista
+                </button>
+            </div>
+            <div id="lista-filmes">
+
+                <div class="text-center">
+                    <div class="spinner-border text-danger" role="status">
+                        <span class="visually-hidden">Carregando...</span>
+                    </div>
+                    <p class="mt-2">Carregando filmes...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="api.js"></script>
+</body>
+</html>

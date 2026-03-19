@@ -3,12 +3,14 @@ package com.amzingMovies.crudFilmes.controller;
 import com.amzingMovies.crudFilmes.model.Filme;
 import com.amzingMovies.crudFilmes.repository.FilmesRepository;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 import java.util.Optional;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/filmes")
+@CrossOrigin(origins = "*")
 public class filmeController {
 
     public FilmesRepository filmesRepository;
@@ -24,6 +26,12 @@ public class filmeController {
         filme.setId(id);
         filmesRepository.save(filme);
         return filme;
+    }
+
+    @GetMapping
+    @CrossOrigin(origins = "*")
+    public List<Filme> getAllMovies() {
+        return filmesRepository.findAll();
     }
 
     @GetMapping("/{id}")
