@@ -11,7 +11,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/filmes")
 @CrossOrigin(origins = "*")
-public class filmeController  {
+public class filmeController   {
 
     public FilmesRepository filmesRepository;
 
