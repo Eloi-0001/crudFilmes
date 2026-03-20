@@ -1,12 +1,12 @@
-const API = "http://localhost:8080/filmes";
+const API = "/filmes";
 
-// Mostrar formulário selecionado
+
 function mostrarForm(tipo) {
     document.querySelectorAll('[id^="form-"]').forEach(f => f.classList.add('d-none'));
     document.getElementById(`form-${tipo}`).classList.remove('d-none');
 }
 
-// CARREGAR TODOS OS FILMES (novo)
+
 async function carregarTodosFilmes() {
     try {
         const response = await fetch(API);
