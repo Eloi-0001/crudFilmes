@@ -1,12 +1,12 @@
 const API = "/filmes";
 
-
+// Mostrar formulário selecionado
 function mostrarForm(tipo) {
     document.querySelectorAll('[id^="form-"]').forEach(f => f.classList.add('d-none'));
     document.getElementById(`form-${tipo}`).classList.remove('d-none');
 }
 
-
+// CARREGAR TODOS OS FILMES
 async function carregarTodosFilmes() {
     try {
         const response = await fetch(API);
@@ -24,19 +24,19 @@ async function carregarTodosFilmes() {
         filmes.forEach(filme => {
             html += `
                 <div class="col-md-4 mb-3">
-                    <div class="card h-100">
+                    <div class="card h-100 movie-card">
                         <div class="card-body">
-                            <h2 class="card-title">${filme.titulo}</h2>
+                            <h5 class="card-title">${filme.titulo}</h5>
                             <p class="card-text">
+                                <strong>ID:</strong> ${filme.id.substring(0, 8)}...<br>
                                 <strong>Gênero:</strong> ${filme.genero || 'N/A'}<br>
                                 <strong>Diretor:</strong> ${filme.diretor || 'N/A'}<br>
                                 <strong>Ano:</strong> ${filme.anoPublicacao || 'N/A'}<br>
                                 <strong>Preço:</strong> ${filme.preco ? 'R$ ' + filme.preco.toFixed(2) : 'N/A'}<br>
-                                <strong>Em cartaz:</strong> ${filme.emCartaz ? 'Sim' : 'Não'}<br>
-                                <strong>Id:</strong> ${filme.id || 'N/A'}
+                                <strong>Em cartaz:</strong> ${filme.emCartaz ? ' Sim' : 'Não'}
                             </p>
-                            <button class="btn btn-sm btn-primary" onclick="copiarID('${filme.id}')">
-                                Copiar ID
+                            <button class="btn btn-sm btn-outline-primary" onclick="copiarID('${filme.id}')">
+                                📋 Copiar ID
                             </button>
                         </div>
                     </div>
@@ -48,6 +48,10 @@ async function carregarTodosFilmes() {
 
     } catch (error) {
         console.error('Erro ao carregar filmes:', error);
+        const container = document.getElementById('lista-filmes');
+        if (container) {
+            container.innerHTML = '<div class="alert alert-danger">Erro ao carregar filmes. Verifique se a API está rodando.</div>';
+        }
     }
 }
 
@@ -67,6 +71,11 @@ async function cadastrarFilme() {
         preco: parseFloat(document.getElementById('preco').value) || null,
         emCartaz: document.getElementById('cartaz').checked
     };
+
+    if (!filme.titulo) {
+        alert('O título é obrigatório!');
+        return;
+    }
 
     try {
         const response = await fetch(API, {
@@ -95,7 +104,7 @@ async function cadastrarFilme() {
     } catch (error) {
         const msg = document.getElementById('msg-cadastro');
         msg.className = 'alert alert-danger mt-2';
-        msg.textContent = 'Erro ao cadastrar filme';
+        msg.textContent = ' Erro ao cadastrar filme';
     }
     document.getElementById('msg-cadastro').classList.remove('d-none');
 
@@ -110,7 +119,7 @@ async function consultarFilme() {
     const resultado = document.getElementById('resultado-consulta');
 
     if (!id) {
-        resultado.innerHTML = '<div class="alert alert-warning">Digite um ID</div>';
+        resultado.innerHTML = '<div class="alert alert-warning">⚠ Digite um ID</div>';
         return;
     }
 
@@ -124,7 +133,10 @@ async function consultarFilme() {
         const filme = await response.json();
 
         resultado.innerHTML = `
-            <div class="card">
+            <div class="card border-success">
+                <div class="card-header bg-success text-white">
+                    <strong>🎬 Filme Encontrado</strong>
+                </div>
                 <div class="card-body">
                     <p><strong>ID:</strong> ${filme.id}</p>
                     <p><strong>Título:</strong> ${filme.titulo}</p>
@@ -132,12 +144,12 @@ async function consultarFilme() {
                     <p><strong>Diretor:</strong> ${filme.diretor || 'N/A'}</p>
                     <p><strong>Ano:</strong> ${filme.anoPublicacao || 'N/A'}</p>
                     <p><strong>Preço:</strong> ${filme.preco ? 'R$ ' + filme.preco.toFixed(2) : 'N/A'}</p>
-                    <p><strong>Em cartaz:</strong> ${filme.emCartaz ? 'Sim' : 'Não'}</p>
+                    <p><strong>Em cartaz:</strong> ${filme.emCartaz ? ' Sim' : ' Não'}</p>
                 </div>
             </div>
         `;
     } catch (error) {
-        resultado.innerHTML = '<div class="alert alert-danger">Filme não encontrado</div>';
+        resultado.innerHTML = '<div class="alert alert-danger"> Filme não encontrado</div>';
     }
 }
 
@@ -146,7 +158,7 @@ async function carregarFilme() {
     const id = document.getElementById('id-edicao').value;
 
     if (!id) {
-        alert('Digite um ID');
+        alert('⚠️ Digite um ID');
         return;
     }
 
@@ -185,6 +197,11 @@ async function editarFilme() {
         emCartaz: document.getElementById('cartaz-edit').checked
     };
 
+    if (!filme.titulo) {
+        alert('O título é obrigatório!');
+        return;
+    }
+
     try {
         const response = await fetch(`${API}/${id}`, {
             method: 'PUT',
@@ -219,11 +236,11 @@ async function deletarFilme() {
     const id = document.getElementById('id-delecao').value;
 
     if (!id) {
-        alert('Digite um ID');
+        alert('⚠️ Digite um ID');
         return;
     }
 
-    if (!confirm('Tem certeza que deseja deletar este filme?')) {
+    if (!confirm('⚠️ Tem certeza que deseja deletar este filme? Esta ação não pode ser desfeita!')) {
         return;
     }
 
@@ -257,7 +274,6 @@ async function deletarFilme() {
 
 // Carregar filmes quando a página iniciar
 document.addEventListener('DOMContentLoaded', function() {
-    // Se existir o elemento lista-filmes, carregar os filmes
     if (document.getElementById('lista-filmes')) {
         carregarTodosFilmes();
     }

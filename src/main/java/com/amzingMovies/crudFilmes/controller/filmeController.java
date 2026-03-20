@@ -3,9 +3,8 @@ package com.amzingMovies.crudFilmes.controller;
 import com.amzingMovies.crudFilmes.model.Filme;
 import com.amzingMovies.crudFilmes.repository.FilmesRepository;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -29,7 +28,6 @@ public class filmeController {
     }
 
     @GetMapping
-    @CrossOrigin(origins = "*")
     public List<Filme> getAllMovies() {
         return filmesRepository.findAll();
     }
@@ -44,8 +42,9 @@ public class filmeController {
         filmesRepository.deleteById(id);
     }
 
-    @PutMapping
-    public void updateMovie(@PathVariable("id") String id, Filme filme){
+    // CORRIGIDO: Adicionado @RequestBody e o caminho correto
+    @PutMapping("/{id}")
+    public void updateMovie(@PathVariable("id") String id, @RequestBody Filme filme){
         filme.setId(id);
         filmesRepository.save(filme);
     }
